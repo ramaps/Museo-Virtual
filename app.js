@@ -307,8 +307,13 @@ function mountedPose(slot){
 function addArt(p,slot,index){const group=new THREE.Group();const pose=mountedPose(slot);group.position.set(pose.x,slot.y,pose.z);group.rotation.y=slot.ry;
 const isCompactSlot=['S5','C1','C2','C3','C4','C5','C6','C7','C8'].includes(slot.id);
 const maxArtWidth=isCompactSlot?1.18:1.52,maxArtHeight=isCompactSlot?1.40:1.78,framePadding=isCompactSlot?.18:.20,minBottom=.92,maxTop=isCompactSlot?2.62:3.20;
-const frame=new THREE.Mesh(new THREE.BoxGeometry(maxArtWidth+framePadding,maxArtHeight+framePadding,.10),new THREE.MeshStandardMaterial({color:0x211712,roughness:.62}));frame.position.z=-.055;group.add(frame);
-const mat=new THREE.MeshStandardMaterial({color:0xf5f5f5,roughness:.88,metalness:0});const art=new THREE.Mesh(new THREE.PlaneGeometry(maxArtWidth,maxArtHeight),mat);art.position.z=.012;art.userData.painting=p;group.add(art);
+const woodMat=new THREE.MeshStandardMaterial({color:0x4b3021,roughness:.70,metalness:.04});
+const passepartoutMat=new THREE.MeshStandardMaterial({color:0xe9dfcf,roughness:.88,metalness:0});
+const goldMat=new THREE.MeshStandardMaterial({color:0xc19a55,roughness:.38,metalness:.28});
+const frame=new THREE.Mesh(new THREE.BoxGeometry(maxArtWidth+framePadding+.18,maxArtHeight+framePadding+.18,.12),woodMat);frame.position.z=-.065;group.add(frame);
+const passepartout=new THREE.Mesh(new THREE.PlaneGeometry(maxArtWidth+framePadding*.78,maxArtHeight+framePadding*.78),passepartoutMat);passepartout.position.z=-.004;group.add(passepartout);
+const innerTrim=new THREE.Mesh(new THREE.PlaneGeometry(maxArtWidth+.08,maxArtHeight+.08),goldMat);innerTrim.position.z=.004;group.add(innerTrim);
+const mat=new THREE.MeshStandardMaterial({color:0xf5f5f5,roughness:.88,metalness:0});const art=new THREE.Mesh(new THREE.PlaneGeometry(maxArtWidth,maxArtHeight),mat);art.position.z=.014;art.userData.painting=p;group.add(art);
 const labelWidth=isCompactSlot?.84:1.02,labelHeight=isCompactSlot?.20:.26,labelGap=isCompactSlot?.14:.18;
 const labelBg=new THREE.Mesh(new THREE.PlaneGeometry(labelWidth,labelHeight),new THREE.MeshBasicMaterial({color:0xf4efe8}));group.add(labelBg);
 const normal=new THREE.Vector3(Math.sin(slot.ry),0,Math.cos(slot.ry));
@@ -330,9 +335,11 @@ function resizeArtwork(ratio=maxArtWidth/maxArtHeight){
   let width=maxArtWidth,height=width/ratio;
   if(height>maxArtHeight){height=maxArtHeight;width=height*ratio}
   art.geometry.dispose();art.geometry=new THREE.PlaneGeometry(width,height);
-  frame.geometry.dispose();frame.geometry=new THREE.BoxGeometry(width+framePadding,height+framePadding,.10);
-  labelBg.position.set(0,-(height+framePadding)/2-labelGap,.014);
-  const framedHeight=height+framePadding;
+  innerTrim.geometry.dispose();innerTrim.geometry=new THREE.PlaneGeometry(width+.08,height+.08);
+  passepartout.geometry.dispose();passepartout.geometry=new THREE.PlaneGeometry(width+framePadding*.78,height+framePadding*.78);
+  frame.geometry.dispose();frame.geometry=new THREE.BoxGeometry(width+framePadding+.18,height+framePadding+.18,.12);
+  labelBg.position.set(0,-(height+framePadding+.18)/2-labelGap,.014);
+  const framedHeight=height+framePadding+.18;
   group.position.y=Math.min(maxTop-framedHeight/2,Math.max(slot.y,minBottom+framedHeight/2));
   updateArtGuard(width);
   if(group.userData.target)group.userData.target.position.set(group.position.x,group.position.y+.08,group.position.z);
