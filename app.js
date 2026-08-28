@@ -150,11 +150,11 @@ const MOUNT_SLOTS=[
 {id:'O3',n:18,room:'Sala Oeste',label:'Pared sur · izquierda',x:-11.8,y:2.18,z:10.78,ry:Math.PI,mx:17,my:64},
 {id:'O4',n:19,room:'Sala Oeste',label:'Pared sur · centro izquierda',x:-7.5,y:2.18,z:10.78,ry:Math.PI,mx:29,my:64},
 {id:'O5',n:20,room:'Sala Oeste',label:'Tabique en L · interior',x:-7.7,y:2.18,z:1.52,ry:Math.PI,mx:29,my:38},
-{id:'C1',n:21,room:'Sala Norte',label:'Pared central · frente izquierdo',x:-5.8,y:2.18,z:-3.42,ry:0,mx:42,my:28},
-{id:'C2',n:22,room:'Sala Norte',label:'Pared central · frente centro',x:-2.8,y:2.18,z:-3.42,ry:0,mx:50,my:28},
-{id:'C3',n:23,room:'Sala Norte',label:'Pared central · frente derecho',x:0.2,y:2.18,z:-3.42,ry:0,mx:58,my:28},
-{id:'C4',n:24,room:'Sala Oeste',label:'Pared central · reverso izquierdo',x:-5.6,y:2.18,z:-3.78,ry:Math.PI,mx:42,my:33},
-{id:'C5',n:25,room:'Sala Oeste',label:'Pared central · reverso derecho',x:-2.2,y:2.18,z:-3.78,ry:Math.PI,mx:52,my:33},
+{id:'C1',n:21,room:'Sala Norte',label:'Pared central · frente izquierdo',x:-5.8,y:1.78,z:-3.42,ry:0,mx:42,my:28},
+{id:'C2',n:22,room:'Sala Norte',label:'Pared central · frente centro',x:-2.8,y:1.78,z:-3.42,ry:0,mx:50,my:28},
+{id:'C3',n:23,room:'Sala Norte',label:'Pared central · frente derecho',x:0.2,y:1.78,z:-3.42,ry:0,mx:58,my:28},
+{id:'C4',n:24,room:'Sala Oeste',label:'Pared central · reverso izquierdo',x:-5.6,y:1.78,z:-3.78,ry:Math.PI,mx:42,my:33},
+{id:'C5',n:25,room:'Sala Oeste',label:'Pared central · reverso derecho',x:-2.2,y:1.78,z:-3.78,ry:Math.PI,mx:52,my:33},
 {id:'C6',n:26,room:'Sala Sur',label:'Panel central · frente',x:0.0,y:1.75,z:3.60,ry:0,mx:50,my:45},
 {id:'C7',n:27,room:'Sala Sur',label:'Panel central · reverso',x:0.0,y:1.75,z:3.20,ry:Math.PI,mx:50,my:48},
 {id:'C8',n:28,room:'Sala Sur',label:'Panel derecho · reverso',x:8.55,y:1.75,z:3.7,ry:-Math.PI/2,mx:81,my:45}
@@ -305,11 +305,11 @@ function mountedPose(slot){
   return best?{x:best.x+normal.x*mountOffset,z:best.z+normal.z*mountOffset}:{x:slot.x,z:slot.z};
 }
 function addArt(p,slot,index){const group=new THREE.Group();const pose=mountedPose(slot);group.position.set(pose.x,slot.y,pose.z);group.rotation.y=slot.ry;
-const isPanelSlot=['S5','C6','C7','C8'].includes(slot.id);
-const maxArtWidth=isPanelSlot?1.36:1.70,maxArtHeight=isPanelSlot?1.62:2.02,framePadding=isPanelSlot?.18:.20,minBottom=.92;
+const isCompactSlot=['S5','C1','C2','C3','C4','C5','C6','C7','C8'].includes(slot.id);
+const maxArtWidth=isCompactSlot?1.18:1.52,maxArtHeight=isCompactSlot?1.40:1.78,framePadding=isCompactSlot?.18:.20,minBottom=.92,maxTop=isCompactSlot?2.62:3.20;
 const frame=new THREE.Mesh(new THREE.BoxGeometry(maxArtWidth+framePadding,maxArtHeight+framePadding,.10),new THREE.MeshStandardMaterial({color:0x211712,roughness:.62}));frame.position.z=-.055;group.add(frame);
 const mat=new THREE.MeshStandardMaterial({color:0xf5f5f5,roughness:.88,metalness:0});const art=new THREE.Mesh(new THREE.PlaneGeometry(maxArtWidth,maxArtHeight),mat);art.position.z=.012;art.userData.painting=p;group.add(art);
-const labelWidth=isPanelSlot?.92:1.12,labelHeight=isPanelSlot?.22:.28,labelGap=isPanelSlot?.16:.22;
+const labelWidth=isCompactSlot?.84:1.02,labelHeight=isCompactSlot?.20:.26,labelGap=isCompactSlot?.14:.18;
 const labelBg=new THREE.Mesh(new THREE.PlaneGeometry(labelWidth,labelHeight),new THREE.MeshBasicMaterial({color:0xf4efe8}));group.add(labelBg);
 const normal=new THREE.Vector3(Math.sin(slot.ry),0,Math.cos(slot.ry));
 const artGuard={minX:0,maxX:0,minZ:0,maxZ:0,clearance:.05,type:'art'};
@@ -332,7 +332,8 @@ function resizeArtwork(ratio=maxArtWidth/maxArtHeight){
   art.geometry.dispose();art.geometry=new THREE.PlaneGeometry(width,height);
   frame.geometry.dispose();frame.geometry=new THREE.BoxGeometry(width+framePadding,height+framePadding,.10);
   labelBg.position.set(0,-(height+framePadding)/2-labelGap,.014);
-  group.position.y=Math.max(slot.y,minBottom+(height+framePadding)/2);
+  const framedHeight=height+framePadding;
+  group.position.y=Math.min(maxTop-framedHeight/2,Math.max(slot.y,minBottom+framedHeight/2));
   updateArtGuard(width);
   if(group.userData.target)group.userData.target.position.set(group.position.x,group.position.y+.08,group.position.z);
 }
