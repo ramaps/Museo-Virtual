@@ -100,6 +100,17 @@ const datosObras = [
 const IMAGENES = [imagen1,imagen2,imagen3,imagen4,imagen5,imagen6,imagen7,imagen8,imagen9,imagen10,imagen11,imagen12,imagen13,imagen14,imagen15,imagen16,imagen17,imagen18,imagen19,imagen20,imagen21,imagen22,imagen23,imagen24,imagen25,imagen26,imagen27,imagen28];
 const DESCRIPCIONES = [descripcionImagen1,descripcionImagen2,descripcionImagen3,descripcionImagen4,descripcionImagen5,descripcionImagen6,descripcionImagen7,descripcionImagen8,descripcionImagen9,descripcionImagen10,descripcionImagen11,descripcionImagen12,descripcionImagen13,descripcionImagen14,descripcionImagen15,descripcionImagen16,descripcionImagen17,descripcionImagen18,descripcionImagen19,descripcionImagen20,descripcionImagen21,descripcionImagen22,descripcionImagen23,descripcionImagen24,descripcionImagen25,descripcionImagen26,descripcionImagen27,descripcionImagen28];
 
+/* ===== CUADROS ACTIVOS =====
+   Para quitar una obra del museo y del mapa, borrá su número de esta lista.
+   Para volver a mostrarla, agregá nuevamente el número.
+   Ejemplo: [1,2,4,5] oculta la obra 3.
+*/
+const cuadrosActivos = [
+  1,2,3,4,5,6,7,8,9,10,11,12,13,14,
+  15,16,17,18,19,20,21,22,23,24,25,26,27,28
+];
+const CUADROS_ACTIVOS = new Set(cuadrosActivos);
+
 const STORAGE_KEY='musea_uploaded_v4_slots';
 // Catálogo único de lugares reales de montaje. x/z/ry se usan en 3D; mx/my se usan en el plano 2D.
 const MOUNT_SLOTS=[
@@ -168,7 +179,8 @@ const defaults=[
 let uploaded=[];try{uploaded=JSON.parse(localStorage.getItem(STORAGE_KEY)||localStorage.getItem('musea_uploaded_v3')||'[]')}catch(e){}
 // Migra obras de versiones anteriores: si no tenían punto de montaje, se asigna el primer lugar libre de su sala.
 {const used=new Set(defaults.map(p=>p.slotId));uploaded.forEach(p=>{if(!p.slotId){const free=MOUNT_SLOTS.find(s=>s.room===p.room&&!used.has(s.id));if(free)p.slotId=free.id}if(p.slotId)used.add(p.slotId)});try{localStorage.setItem(STORAGE_KEY,JSON.stringify(uploaded))}catch(e){}}
-let paintings=[...defaults,...uploaded];let nextId=Math.max(...paintings.map(x=>x.id),4)+1;
+const obrasBaseActivas=defaults.filter(p=>CUADROS_ACTIVOS.has(p.id));
+let paintings=[...obrasBaseActivas,...uploaded];let nextId=Math.max(...paintings.map(x=>x.id),4)+1;
 const $=id=>document.getElementById(id),grid=$('grid'),detail=$('detail'),detailImg=$('detailImg'),detailTitle=$('detailTitle'),detailMeta=$('detailMeta'),detailDesc=$('detailDesc');
 function displayRoom(room){return String(room||'').replace('Sala Norte','Galería Norte').replace('Sala Este','Galería Este').replace('Sala Sur','Galería Sur').replace('Sala Oeste','Galería Oeste').replace('Sala Central','Galería Central')}
 function esc(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
@@ -193,7 +205,24 @@ function openUploadForSlot(slotId=''){fillSlotSelect(slotId);mountModal.classLis
 $('cancelUpload').onclick=()=>uploadModal.classList.remove('open');
 $('imageFile').onchange=()=>{const f=$('imageFile').files[0];if(!f){previewData='';$('preview').textContent='Vista previa de la imagen';return}if(f.size>5*1024*1024){alert('Usá una imagen menor a 5 MB para poder guardarla en el navegador.');$('imageFile').value='';return}const r=new FileReader();r.onload=e=>{previewData=e.target.result;$('preview').innerHTML=`<img src="${previewData}" alt="Vista previa">`};r.readAsDataURL(f)};
 $('saveUpload').onclick=()=>{const sl=slotById(slotSelect.value);if(!sl){alert('Elegí una ubicación libre en el mapa o en la lista.');return}if(occupiedSlotIds().has(sl.id)){alert('Ese lugar ya está ocupado. Elegí otro punto verde.');fillSlotSelect();return}if(!$('title').value.trim()||!$('artist').value.trim()||!previewData){alert('Completá Título, Artista e Imagen.');return}const p={id:nextId++,title:$('title').value.trim(),artist:$('artist').value.trim(),year:$('year').value.trim()||'2026',category:$('category').value,room:sl.room,slotId:sl.id,description:$('desc').value.trim()||'Sin descripción',image:previewData};paintings.push(p);uploaded.push(p);try{localStorage.setItem(STORAGE_KEY,JSON.stringify(uploaded))}catch(e){alert('La obra se añadió, pero el navegador no pudo conservarla de forma permanente por falta de espacio.')}render();renderMountMap();window.rebuildPaintings?.();uploadModal.classList.remove('open');$('title').value='';$('artist').value='';$('desc').value='';$('imageFile').value='';previewData='';$('preview').textContent='Vista previa de la imagen'};
-function renderMountMap(){const used=occupiedSlotIds(),layer=$('slotLayer'),list=$('slotList');layer.innerHTML='';list.innerHTML='';MOUNT_SLOTS.forEach(sl=>{const p=paintings.find(x=>x.slotId===sl.id),free=!used.has(sl.id);const pin=document.createElement('button');pin.type='button';pin.className=`slot-pin ${free?'free':'used'}`;pin.style.left=sl.mx+'%';pin.style.top=sl.my+'%';pin.textContent=sl.n;pin.title=`Punto ${sl.n} · ${sl.room} · ${free?'Libre':'Ocupado'}`;pin.onclick=()=>selectMapSlot(sl,p);layer.appendChild(pin);const row=document.createElement('button');row.type='button';row.className='slot-row';row.innerHTML=`<span><strong>Punto ${sl.n} · ${esc(displayRoom(sl.room))}</strong><small>${esc(sl.label)}</small></span><span class="status ${free?'free':'used'}">${free?'LIBRE':'OCUPADO'}</span>`;row.onclick=()=>selectMapSlot(sl,p);list.appendChild(row)});}
+/* El mapa toma la posición REAL del punto 3D.
+   Además desplaza el número ligeramente hacia la cara donde cuelga la obra,
+   evitando que dos caras de una misma pared queden una encima de la otra. */
+function mapPositionForSlot(sl){
+  const ux=sl.x/SPACE_SCALE, uz=sl.z/SPACE_SCALE;
+  const normalX=Math.sin(sl.ry||0), normalZ=Math.cos(sl.ry||0);
+  const separation=.82;
+  const px=ux + normalX*separation;
+  const pz=uz + normalZ*separation;
+  const mx=50 + (px/16)*47;
+  const my=34 + (pz/11)*31;
+  return {mx:Math.max(3.2,Math.min(96.8,mx)),my:Math.max(3.2,Math.min(64.8,my))};
+}
+function visibleMountSlots(){
+  const extraUsed=new Set(paintings.filter(p=>p.id>28&&p.slotId).map(p=>p.slotId));
+  return MOUNT_SLOTS.filter(sl=>CUADROS_ACTIVOS.has(sl.n)||extraUsed.has(sl.id));
+}
+function renderMountMap(){const used=occupiedSlotIds(),layer=$('slotLayer'),list=$('slotList');layer.innerHTML='';list.innerHTML='';visibleMountSlots().forEach(sl=>{const p=paintings.find(x=>x.slotId===sl.id),free=!used.has(sl.id),mp=mapPositionForSlot(sl);const pin=document.createElement('button');pin.type='button';pin.className=`slot-pin ${free?'free':'used'}`;pin.style.left=mp.mx+'%';pin.style.top=mp.my+'%';pin.textContent=sl.n;pin.title=`Punto ${sl.n} · ${sl.room} · ${free?'Libre':'Ocupado'}`;pin.onclick=()=>selectMapSlot(sl,p);layer.appendChild(pin);const row=document.createElement('button');row.type='button';row.className='slot-row';row.innerHTML=`<span><strong>Punto ${sl.n} · ${esc(displayRoom(sl.room))}</strong><small>${esc(sl.label)}</small></span><span class="status ${free?'free':'used'}">${free?'LIBRE':'OCUPADO'}</span>`;row.onclick=()=>selectMapSlot(sl,p);list.appendChild(row)});}
 function selectMapSlot(sl,p){document.querySelectorAll('.slot-pin').forEach(x=>x.classList.toggle('selected',x.textContent==String(sl.n)));$('slotSummary').innerHTML=p?`<b>Punto ${sl.n} · ${esc(displayRoom(sl.room))}</b>${esc(sl.label)}<br>Obra: <strong>${esc(p.title)}</strong>.`:`<b>Punto ${sl.n} · ${esc(displayRoom(sl.room))}</b>${esc(sl.label)}<br><strong>Disponible para una futura obra.</strong>`;}
 function openMountMap(){renderMountMap();mountModal.classList.add('open')}
 $('openMountMap').onclick=openMountMap;$('miniPlan').onclick=e=>{e.preventDefault();e.stopPropagation();openMountMap()};$('closeMountMap').onclick=()=>mountModal.classList.remove('open');mountModal.onclick=e=>{if(e.target===mountModal)mountModal.classList.remove('open')};
@@ -207,20 +236,8 @@ const container=$('museum3d'),roomLabel=$('roomLabel'),artHint=$('artHint'),isTo
 const scene=new THREE.Scene();scene.background=new THREE.Color(0x18130f);scene.fog=new THREE.Fog(0x18130f,38,78);
 const camera=new THREE.PerspectiveCamera(isTouch?60:58,1,.16,150);camera.rotation.order='YXZ';camera.position.set(0,1.65,14.7);
 const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,isTouch?1.35:1.8));renderer.shadowMap.enabled=false;renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;container.appendChild(renderer.domElement);
-// En móviles evitamos PointerLockControls por completo: algunos navegadores táctiles
-// (Chrome/Samsung/Safari) pueden mantener la cámara dentro del objeto del control y
-// provocar que el joystick o el giro táctil no muevan la vista correctamente.
-let controls=null;
-if(isTouch){
-  scene.add(camera);
-  window.museumControls=null;
-}else{
-  controls=new THREE.PointerLockControls(camera,renderer.domElement);
-  window.museumControls=controls;
-  scene.add(controls.getObject());
-}
-$('enter3d').onclick=()=>{if(!isTouch&&controls)controls.lock()};
-renderer.domElement.addEventListener('click',()=>{if(!isTouch&&controls&&!controls.isLocked)controls.lock()});
+const controls=new THREE.PointerLockControls(camera,renderer.domElement);window.museumControls=controls;scene.add(controls.getObject());
+$('enter3d').onclick=()=>{if(!isTouch)controls.lock()};renderer.domElement.addEventListener('click',()=>{if(!isTouch&&!controls.isLocked)controls.lock()});
 window.museumResetMobile=()=>{if(isTouch){camera.position.set(0,1.65,14.7);camera.rotation.set(0,0,0)}};
 function resetPlayer(){camera.position.set(0,1.65,14.7);camera.rotation.set(0,0,0);joyX=0;joyY=0;if(knob)knob.style.transform='translate(0,0)'}$('reset3d').onclick=resetPlayer;$('resetTouch').onclick=resetPlayer;
 scene.add(new THREE.HemisphereLight(0xfff8ed,0x76675d,1.02));scene.add(new THREE.AmbientLight(0xfff4e8,.38));const sun=new THREE.DirectionalLight(0xfff2e3,.20);sun.position.set(8,14,10);sun.castShadow=false;scene.add(sun);
@@ -354,43 +371,12 @@ function collides(pos){
 function showDistanceGuard(){blockedUntil=performance.now()+850;const n=$('distanceNote');if(n)n.classList.add('show')}
 function updateDistanceGuard(){const n=$('distanceNote');if(n&&performance.now()>blockedUntil)n.classList.remove('show')}
 function currentRoom(p){const x=p.x/SPACE_SCALE,z=p.z/SPACE_SCALE;if(z>7.7&&Math.abs(x)<4.6)return 'Hall de acceso';if(z<0&&x<-6.5)return 'Galería Norte';if(z<0&&x>2.0)return 'Galería Este';if(z>=0&&x>3.8)return 'Galería Sur';if(z>=0&&x<-4.8)return 'Galería Oeste';return 'Galería Central'}
-const ray=new THREE.Raycaster();function nearestPainting(){ray.setFromCamera(new THREE.Vector2(0,0),camera);const hit=ray.intersectObjects(clickable,false)[0];return hit&&hit.distance<4.2?hit:null}function inspect(){const hit=nearestPainting();if(hit){if(!isTouch&&controls&&controls.isLocked)controls.unlock();setTimeout(()=>showDetail(hit.object.userData.painting.id),60)}}addEventListener('mousedown',e=>{if(e.button===0&&!isTouch&&controls&&controls.isLocked)inspect()});$('inspectTouch').onclick=inspect;
+const ray=new THREE.Raycaster();function nearestPainting(){ray.setFromCamera(new THREE.Vector2(0,0),camera);const hit=ray.intersectObjects(clickable,false)[0];return hit&&hit.distance<4.2?hit:null}function inspect(){const hit=nearestPainting();if(hit){if(!isTouch&&controls.isLocked)controls.unlock();setTimeout(()=>showDetail(hit.object.userData.painting.id),60)}}addEventListener('mousedown',e=>{if(e.button===0&&!isTouch&&controls.isLocked)inspect()});$('inspectTouch').onclick=inspect;
 // Controles táctiles
 let joyX=0,joyY=0;const joystick=$('joystick'),knob=$('joyKnob'),lookPad=$('lookPad');let joyId=null,lookId=null,lastLookX=0,lastLookY=0;
 function setJoyFromEvent(e){const r=joystick.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,max=r.width*.32;let dx=e.clientX-cx,dy=e.clientY-cy;const len=Math.hypot(dx,dy)||1,scale=Math.min(1,max/len);dx*=scale;dy*=scale;knob.style.transform=`translate(${dx}px,${dy}px)`;joyX=dx/max;joyY=dy/max}
-function resetJoy(){joyId=null;joyX=0;joyY=0;knob.style.transform='translate(0,0)'}
-function applyLook(x,y){
-  const dx=x-lastLookX,dy=y-lastLookY;lastLookX=x;lastLookY=y;
-  camera.rotation.y-=dx*.0030;
-  camera.rotation.x-=dy*.0026;
-  camera.rotation.x=Math.max(-1.05,Math.min(1.05,camera.rotation.x));
-}
-if(window.PointerEvent){
-  joystick.addEventListener('pointerdown',e=>{e.preventDefault();joyId=e.pointerId;try{joystick.setPointerCapture(e.pointerId)}catch(_){}setJoyFromEvent(e)},{passive:false});
-  joystick.addEventListener('pointermove',e=>{if(e.pointerId===joyId){e.preventDefault();setJoyFromEvent(e)}},{passive:false});
-  const endJoy=e=>{if(e.pointerId!==joyId)return;e.preventDefault();resetJoy()};
-  joystick.addEventListener('pointerup',endJoy,{passive:false});
-  joystick.addEventListener('pointercancel',endJoy,{passive:false});
-  lookPad.addEventListener('pointerdown',e=>{e.preventDefault();lookId=e.pointerId;lastLookX=e.clientX;lastLookY=e.clientY;try{lookPad.setPointerCapture(e.pointerId)}catch(_){}$('mobileLookHint')?.classList.add('hide')},{passive:false});
-  lookPad.addEventListener('pointermove',e=>{if(e.pointerId!==lookId)return;e.preventDefault();applyLook(e.clientX,e.clientY)},{passive:false});
-  const endLook=e=>{if(e.pointerId===lookId)lookId=null};
-  lookPad.addEventListener('pointerup',endLook,{passive:false});
-  lookPad.addEventListener('pointercancel',endLook,{passive:false});
-}else{
-  joystick.addEventListener('touchstart',e=>{e.preventDefault();const t=e.changedTouches[0];joyId=t.identifier;setJoyFromEvent(t)},{passive:false});
-  joystick.addEventListener('touchmove',e=>{const t=[...e.changedTouches].find(t=>t.identifier===joyId);if(!t)return;e.preventDefault();setJoyFromEvent(t)},{passive:false});
-  const endJoyTouch=e=>{if([...e.changedTouches].some(t=>t.identifier===joyId)){e.preventDefault();resetJoy()}};
-  joystick.addEventListener('touchend',endJoyTouch,{passive:false});
-  joystick.addEventListener('touchcancel',endJoyTouch,{passive:false});
-  lookPad.addEventListener('touchstart',e=>{e.preventDefault();const t=e.changedTouches[0];lookId=t.identifier;lastLookX=t.clientX;lastLookY=t.clientY;$('mobileLookHint')?.classList.add('hide')},{passive:false});
-  lookPad.addEventListener('touchmove',e=>{const t=[...e.changedTouches].find(t=>t.identifier===lookId);if(!t)return;e.preventDefault();applyLook(t.clientX,t.clientY)},{passive:false});
-  const endLookTouch=e=>{if([...e.changedTouches].some(t=>t.identifier===lookId))lookId=null};
-  lookPad.addEventListener('touchend',endLookTouch,{passive:false});
-  lookPad.addEventListener('touchcancel',endLookTouch,{passive:false});
-}
-if(isTouch){
-  ['touchstart','touchmove'].forEach(type=>container.addEventListener(type,e=>e.preventDefault(),{passive:false}));
-}
+joystick.addEventListener('pointerdown',e=>{e.preventDefault();joyId=e.pointerId;try{joystick.setPointerCapture(e.pointerId)}catch(_){}setJoyFromEvent(e)},{passive:false});joystick.addEventListener('pointermove',e=>{if(e.pointerId===joyId){e.preventDefault();setJoyFromEvent(e)}},{passive:false});function endJoy(e){if(e.pointerId!==joyId)return;e.preventDefault();joyId=null;joyX=joyY=0;knob.style.transform='translate(0,0)'}joystick.addEventListener('pointerup',endJoy,{passive:false});joystick.addEventListener('pointercancel',endJoy,{passive:false});
+lookPad.addEventListener('pointerdown',e=>{lookId=e.pointerId;lastLookX=e.clientX;lastLookY=e.clientY;lookPad.setPointerCapture(e.pointerId);$('mobileLookHint')?.classList.add('hide')});lookPad.addEventListener('pointermove',e=>{if(e.pointerId!==lookId)return;const dx=e.clientX-lastLookX,dy=e.clientY-lastLookY;lastLookX=e.clientX;lastLookY=e.clientY;camera.rotation.y-=dx*.00325;camera.rotation.x-=dy*.0029;camera.rotation.x=Math.max(-1.22,Math.min(1.22,camera.rotation.x))});function endLook(e){if(e.pointerId===lookId)lookId=null}lookPad.addEventListener('pointerup',endLook);lookPad.addEventListener('pointercancel',endLook);
 function moveTouch(dt){
   if(Math.abs(joyX)<.06&&Math.abs(joyY)<.06)return;
   // En móvil movemos la cámara directamente. Esto evita conflictos de
@@ -420,7 +406,7 @@ function animate(){
   const pos=camera.position;
   if(isTouch){
     moveTouch(dt);
-  }else if(controls&&controls.isLocked){
+  }else if(controls.isLocked){
     const old=pos.clone(),speed=4.8*dt;
     if(keys.KeyW)controls.moveForward(speed);
     if(keys.KeyS)controls.moveForward(-speed);
