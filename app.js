@@ -132,21 +132,21 @@ const descripcionImagen28='Obra de demostración para probar el montaje completo
 const MOUNT_SLOTS=[
 {id:'N1',n:1,room:'Sala Norte',label:'Pared norte · izquierda',x:-13.4,y:2.18,z:-10.78,ry:0,mx:12,my:4},
 {id:'N2',n:2,room:'Sala Norte',label:'Pared norte · centro',x:-9.4,y:2.18,z:-10.78,ry:0,mx:24,my:4},
-{id:'N3',n:3,room:'Sala Norte',label:'Pared oeste · norte',x:-15.78,y:2.18,z:-7.0,ry:Math.PI/2,mx:4,my:14},
-{id:'N4',n:4,room:'Sala Norte',label:'Pared oeste · media',x:-15.78,y:2.18,z:-3.8,ry:Math.PI/2,mx:4,my:24},
+{id:'N3',n:3,room:'Sala Norte',label:'Pared oeste · norte',x:-16.28,y:2.18,z:-7.0,ry:Math.PI/2,mx:4,my:14},
+{id:'N4',n:4,room:'Sala Norte',label:'Pared oeste · media',x:-16.28,y:2.18,z:-3.8,ry:Math.PI/2,mx:4,my:24},
 {id:'N5',n:5,room:'Sala Norte',label:'Tabique superior izquierdo',x:-11.5,y:2.18,z:-6.74,ry:Math.PI,mx:18,my:16},
 {id:'E1',n:6,room:'Sala Este',label:'Pared central derecha · izquierda',x:5.9,y:2.18,z:-2.42,ry:0,mx:67,my:28},
 {id:'E2',n:7,room:'Sala Este',label:'Pared central derecha · derecha',x:9.4,y:2.18,z:-2.42,ry:0,mx:78,my:28},
-{id:'E3',n:8,room:'Sala Este',label:'Pared este · norte',x:15.78,y:2.18,z:-6.6,ry:-Math.PI/2,mx:96,my:16},
-{id:'E4',n:9,room:'Sala Este',label:'Pared este · media',x:15.78,y:2.18,z:-2.8,ry:-Math.PI/2,mx:96,my:27},
+{id:'E3',n:8,room:'Sala Este',label:'Pared este · norte',x:16.28,y:2.18,z:-6.6,ry:-Math.PI/2,mx:96,my:16},
+{id:'E4',n:9,room:'Sala Este',label:'Pared este · media',x:16.28,y:2.18,z:-2.8,ry:-Math.PI/2,mx:96,my:27},
 {id:'E5',n:10,room:'Sala Este',label:'Pared norte · derecha',x:11.9,y:2.18,z:-10.78,ry:0,mx:84,my:4},
-{id:'S1',n:11,room:'Sala Sur',label:'Pared este · media sur',x:15.78,y:2.18,z:3.0,ry:-Math.PI/2,mx:96,my:40},
-{id:'S2',n:12,room:'Sala Sur',label:'Pared este · sur',x:15.78,y:2.18,z:7.2,ry:-Math.PI/2,mx:96,my:52},
+{id:'S1',n:11,room:'Sala Sur',label:'Pared este · media sur',x:16.28,y:2.18,z:3.0,ry:-Math.PI/2,mx:96,my:40},
+{id:'S2',n:12,room:'Sala Sur',label:'Pared este · sur',x:16.28,y:2.18,z:7.2,ry:-Math.PI/2,mx:96,my:52},
 {id:'S3',n:13,room:'Sala Sur',label:'Pared sur · derecha',x:10.6,y:2.18,z:10.78,ry:Math.PI,mx:80,my:64},
 {id:'S4',n:14,room:'Sala Sur',label:'Pared sur · centro derecha',x:6.3,y:2.18,z:10.78,ry:Math.PI,mx:68,my:64},
-{id:'S5',n:15,room:'Sala Sur',label:'Panel vertical derecho',x:8.10,y:2.10,z:3.7,ry:Math.PI/2,mx:76,my:45},
-{id:'O1',n:16,room:'Sala Oeste',label:'Pared oeste · media sur',x:-15.78,y:2.18,z:2.2,ry:Math.PI/2,mx:4,my:38},
-{id:'O2',n:17,room:'Sala Oeste',label:'Pared oeste · sur',x:-15.78,y:2.18,z:6.4,ry:Math.PI/2,mx:4,my:50},
+{id:'S5',n:15,room:'Sala Sur',label:'Panel vertical derecho',x:8.10,y:1.75,z:3.7,ry:Math.PI/2,mx:76,my:45},
+{id:'O1',n:16,room:'Sala Oeste',label:'Pared oeste · media sur',x:-16.28,y:2.18,z:2.2,ry:Math.PI/2,mx:4,my:38},
+{id:'O2',n:17,room:'Sala Oeste',label:'Pared oeste · sur',x:-16.28,y:2.18,z:6.4,ry:Math.PI/2,mx:4,my:50},
 {id:'O3',n:18,room:'Sala Oeste',label:'Pared sur · izquierda',x:-11.8,y:2.18,z:10.78,ry:Math.PI,mx:17,my:64},
 {id:'O4',n:19,room:'Sala Oeste',label:'Pared sur · centro izquierda',x:-7.5,y:2.18,z:10.78,ry:Math.PI,mx:29,my:64},
 {id:'O5',n:20,room:'Sala Oeste',label:'Tabique en L · interior',x:-7.7,y:2.18,z:1.52,ry:Math.PI,mx:29,my:38},
@@ -155,9 +155,9 @@ const MOUNT_SLOTS=[
 {id:'C3',n:23,room:'Sala Norte',label:'Pared central · frente derecho',x:0.2,y:2.18,z:-3.42,ry:0,mx:58,my:28},
 {id:'C4',n:24,room:'Sala Oeste',label:'Pared central · reverso izquierdo',x:-5.6,y:2.18,z:-3.78,ry:Math.PI,mx:42,my:33},
 {id:'C5',n:25,room:'Sala Oeste',label:'Pared central · reverso derecho',x:-2.2,y:2.18,z:-3.78,ry:Math.PI,mx:52,my:33},
-{id:'C6',n:26,room:'Sala Sur',label:'Panel central · frente',x:-0.65,y:2.08,z:3.60,ry:0,mx:48,my:45},
-{id:'C7',n:27,room:'Sala Sur',label:'Panel central · reverso',x:0.65,y:2.08,z:3.20,ry:Math.PI,mx:53,my:45},
-{id:'C8',n:28,room:'Sala Sur',label:'Panel derecho · reverso',x:8.55,y:2.08,z:3.7,ry:-Math.PI/2,mx:81,my:45}
+{id:'C6',n:26,room:'Sala Sur',label:'Panel central · frente',x:0.0,y:1.75,z:3.60,ry:0,mx:50,my:45},
+{id:'C7',n:27,room:'Sala Sur',label:'Panel central · reverso',x:0.0,y:1.75,z:3.20,ry:Math.PI,mx:50,my:48},
+{id:'C8',n:28,room:'Sala Sur',label:'Panel derecho · reverso',x:8.55,y:1.75,z:3.7,ry:-Math.PI/2,mx:81,my:45}
 ];
 // Museo ampliado: más espacio libre de circulación manteniendo la misma lógica de planta.
 const SPACE_SCALE=1.45;
@@ -233,9 +233,9 @@ back2d.onclick=show2d;$('startTour2d').onclick=startTour;
 (function(){
 const container=$('museum3d'),roomLabel=$('roomLabel'),artHint=$('artHint'),isTouch=matchMedia('(pointer:coarse)').matches||navigator.maxTouchPoints>0;
 const scene=new THREE.Scene();scene.background=new THREE.Color(0x18130f);scene.fog=new THREE.Fog(0x18130f,38,78);
-const camera=new THREE.PerspectiveCamera(isTouch?59:57,1,.18,150);camera.rotation.order='YXZ';camera.position.set(0,1.65,14.7);
+const camera=new THREE.PerspectiveCamera(isTouch?54:52,1,.18,150);camera.rotation.order='YXZ';camera.position.set(0,1.65,14.7);
 const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setPixelRatio(Math.min(devicePixelRatio,isTouch?1.35:1.8));renderer.shadowMap.enabled=false;renderer.outputEncoding=THREE.sRGBEncoding;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.93;container.appendChild(renderer.domElement);
-const controls=new THREE.PointerLockControls(camera,renderer.domElement);window.museumControls=controls;scene.add(controls.getObject());
+const controls=new THREE.PointerLockControls(camera,renderer.domElement);controls.minPolarAngle=Math.PI*.25;controls.maxPolarAngle=Math.PI*.75;window.museumControls=controls;scene.add(controls.getObject());
 $('enter3d').onclick=()=>{if(!isTouch)controls.lock()};renderer.domElement.addEventListener('click',()=>{if(!isTouch&&!controls.isLocked)controls.lock()});
 window.museumResetMobile=()=>{if(isTouch){camera.position.set(0,1.65,14.7);camera.rotation.set(0,0,0)}};
 function resetPlayer(){camera.position.set(0,1.65,14.7);camera.rotation.set(0,0,0);joyX=0;joyY=0;if(knob)knob.style.transform='translate(0,0)'}$('reset3d').onclick=resetPlayer;$('resetTouch').onclick=resetPlayer;
@@ -253,7 +253,7 @@ const obstacles=[];const wallDefs=[];
 function addWall(x,z,w,d,h=4.25,material=wallMat){
   x*=SPACE_SCALE; z*=SPACE_SCALE; w*=SPACE_SCALE; d*=SPACE_SCALE;
   const wall=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);wall.position.set(x,h/2,z);wall.castShadow=false;wall.receiveShadow=false;scene.add(wall);
-  wallDefs.push({x,z,w,d,h});obstacles.push({minX:x-w/2,maxX:x+w/2,minZ:z-d/2,maxZ:z+d/2,clearance:.60,type:'wall'});
+  wallDefs.push({x,z,w,d,h});obstacles.push({minX:x-w/2,maxX:x+w/2,minZ:z-d/2,maxZ:z+d/2,clearance:.68,type:'wall'});
   const horizontal=w>=d;const pl=new THREE.Mesh(new THREE.BoxGeometry(w+.02,.16,d+.02),plinthMat);pl.position.set(x,.08,z);scene.add(pl);return wall;
 }
 // PLANTA ABIERTA inspirada en el esquema aportado por el usuario.
@@ -281,9 +281,9 @@ bench(12.2,6.8,Math.PI/2);bench(-3.0,7.0,0);
 // Iluminación general + puntos suaves sobre zonas de exhibición.
 for(const [x,z] of [[-11,-7],[-3,-4],[8,-3],[-9,3],[0,3],[8,4],[0,8]]){const l=new THREE.PointLight(0xffead0,.22,10,2.2);l.castShadow=false;l.position.set(x*SPACE_SCALE,3.65,z*SPACE_SCALE);scene.add(l)}
 // Lugares de montaje: todos coinciden con una pared existente. Se evita cualquier cuadro “flotando”.
-const textureLoader=new THREE.TextureLoader();let artObjects=[];const clickable=[];
+const textureLoader=new THREE.TextureLoader();let artObjects=[];const clickable=[];const artObstacles=[];
 function disposeObject(o){o.traverse?.(n=>{n.geometry?.dispose?.();if(n.material){if(n.material.map)n.material.map.dispose?.();n.material.dispose?.()}})}
-function clearArt(){artObjects.forEach(o=>{scene.remove(o);if(o.userData.spot)scene.remove(o.userData.spot);if(o.userData.target)scene.remove(o.userData.target);disposeObject(o)});artObjects=[];clickable.length=0}
+function clearArt(){artObjects.forEach(o=>{scene.remove(o);if(o.userData.spot)scene.remove(o.userData.spot);if(o.userData.target)scene.remove(o.userData.target);disposeObject(o)});artObjects=[];clickable.length=0;artObstacles.length=0}
 function mountedPose(slot){
   const normal=new THREE.Vector3(Math.sin(slot.ry),0,Math.cos(slot.ry));
   let best=null,bestDist=Infinity;
@@ -305,43 +305,60 @@ function mountedPose(slot){
   return best?{x:best.x+normal.x*mountOffset,z:best.z+normal.z*mountOffset}:{x:slot.x,z:slot.z};
 }
 function addArt(p,slot,index){const group=new THREE.Group();const pose=mountedPose(slot);group.position.set(pose.x,slot.y,pose.z);group.rotation.y=slot.ry;
-const maxArtWidth=2.05,maxArtHeight=2.42,framePadding=.22,minBottom=.82;
+const isPanelSlot=['S5','C6','C7','C8'].includes(slot.id);
+const maxArtWidth=isPanelSlot?1.36:1.70,maxArtHeight=isPanelSlot?1.62:2.02,framePadding=isPanelSlot?.18:.20,minBottom=.92;
 const frame=new THREE.Mesh(new THREE.BoxGeometry(maxArtWidth+framePadding,maxArtHeight+framePadding,.10),new THREE.MeshStandardMaterial({color:0x211712,roughness:.62}));frame.position.z=-.055;group.add(frame);
 const mat=new THREE.MeshStandardMaterial({color:0xf5f5f5,roughness:.88,metalness:0});const art=new THREE.Mesh(new THREE.PlaneGeometry(maxArtWidth,maxArtHeight),mat);art.position.z=.012;art.userData.painting=p;group.add(art);
-const labelBg=new THREE.Mesh(new THREE.PlaneGeometry(1.12,.28),new THREE.MeshBasicMaterial({color:0xf4efe8}));group.add(labelBg);
+const labelWidth=isPanelSlot?.92:1.12,labelHeight=isPanelSlot?.22:.28,labelGap=isPanelSlot?.16:.22;
+const labelBg=new THREE.Mesh(new THREE.PlaneGeometry(labelWidth,labelHeight),new THREE.MeshBasicMaterial({color:0xf4efe8}));group.add(labelBg);
+const normal=new THREE.Vector3(Math.sin(slot.ry),0,Math.cos(slot.ry));
+const artGuard={minX:0,maxX:0,minZ:0,maxZ:0,clearance:.05,type:'art'};
+artObstacles.push(artGuard);
+function updateArtGuard(width){
+  const halfAlongWall=width/2+.35,depth=1.16,skin=.05;
+  if(Math.abs(normal.z)>.8){
+    artGuard.minX=group.position.x-halfAlongWall;artGuard.maxX=group.position.x+halfAlongWall;
+    artGuard.minZ=Math.min(group.position.z-skin,group.position.z+normal.z*depth);
+    artGuard.maxZ=Math.max(group.position.z+skin,group.position.z+normal.z*depth);
+  }else{
+    artGuard.minZ=group.position.z-halfAlongWall;artGuard.maxZ=group.position.z+halfAlongWall;
+    artGuard.minX=Math.min(group.position.x-skin,group.position.x+normal.x*depth);
+    artGuard.maxX=Math.max(group.position.x+skin,group.position.x+normal.x*depth);
+  }
+}
 function resizeArtwork(ratio=maxArtWidth/maxArtHeight){
   let width=maxArtWidth,height=width/ratio;
   if(height>maxArtHeight){height=maxArtHeight;width=height*ratio}
   art.geometry.dispose();art.geometry=new THREE.PlaneGeometry(width,height);
   frame.geometry.dispose();frame.geometry=new THREE.BoxGeometry(width+framePadding,height+framePadding,.10);
-  labelBg.position.set(0,-(height+framePadding)/2-.22,.014);
+  labelBg.position.set(0,-(height+framePadding)/2-labelGap,.014);
   group.position.y=Math.max(slot.y,minBottom+(height+framePadding)/2);
+  updateArtGuard(width);
   if(group.userData.target)group.userData.target.position.set(group.position.x,group.position.y+.08,group.position.z);
 }
 resizeArtwork();
 const tex=textureLoader.load(p.image,t=>{t.encoding=THREE.sRGBEncoding;const img=t.image||{};resizeArtwork((img.naturalWidth||img.width||700)/(img.naturalHeight||img.height||900));mat.map=t;mat.needsUpdate=true},undefined,()=>{mat.color.set(0xd9cab8);mat.needsUpdate=true});mat.map=tex;
 // Luz cálida de prueba por obra: suave, sin sombras duras ni sobreexposición.
-const normal=new THREE.Vector3(Math.sin(slot.ry),0,Math.cos(slot.ry));
 const target=new THREE.Object3D();target.position.set(group.position.x,group.position.y+.08,group.position.z);scene.add(target);
 const spot=new THREE.SpotLight(0xffedcf,.34,5.4,Math.PI/5,.92,1.8);spot.castShadow=false;spot.position.set(group.position.x+normal.x*.45,3.28,group.position.z+normal.z*.45);spot.target=target;scene.add(spot);group.userData.spot=spot;group.userData.target=target;
 scene.add(group);artObjects.push(group);clickable.push(art)}
 function rebuild(){clearArt();paintings.forEach(p=>{const slot=slotById(p.slotId);if(slot)addArt(p,slot,0)});}
 window.rebuildPaintings=rebuild;rebuild();
 const keys={};addEventListener('keydown',e=>keys[e.code]=true);addEventListener('keyup',e=>keys[e.code]=false);
-const clock=new THREE.Clock(),playerRadius=.36;let blockedUntil=0;
+const clock=new THREE.Clock(),playerRadius=.38;let blockedUntil=0;
 function collides(pos){
   if(pos.x<-(16.05*SPACE_SCALE)||pos.x>(16.05*SPACE_SCALE)||pos.z<-(10.55*SPACE_SCALE)||pos.z>(10.55*SPACE_SCALE))return true;
-  return obstacles.some(o=>{const c=o.clearance||0;return pos.x+playerRadius+c>o.minX&&pos.x-playerRadius-c<o.maxX&&pos.z+playerRadius+c>o.minZ&&pos.z-playerRadius-c<o.maxZ});
+  return obstacles.concat(artObstacles).some(o=>{const c=o.clearance||0;return pos.x+playerRadius+c>o.minX&&pos.x-playerRadius-c<o.maxX&&pos.z+playerRadius+c>o.minZ&&pos.z-playerRadius-c<o.maxZ});
 }
 function showDistanceGuard(){blockedUntil=performance.now()+850;const n=$('distanceNote');if(n)n.classList.add('show')}
 function updateDistanceGuard(){const n=$('distanceNote');if(n&&performance.now()>blockedUntil)n.classList.remove('show')}
 function currentRoom(p){const x=p.x/SPACE_SCALE,z=p.z/SPACE_SCALE;if(z>7.7&&Math.abs(x)<4.6)return 'Hall de acceso';if(z<0&&x<-6.5)return 'Galería Norte';if(z<0&&x>2.0)return 'Galería Este';if(z>=0&&x>3.8)return 'Galería Sur';if(z>=0&&x<-4.8)return 'Galería Oeste';return 'Galería Central'}
-const ray=new THREE.Raycaster();function nearestPainting(){ray.setFromCamera(new THREE.Vector2(0,0),camera);const hit=ray.intersectObjects(clickable,false)[0];return hit&&hit.distance<4.0?hit:null}function inspect(){const hit=nearestPainting();if(hit){if(!isTouch&&controls.isLocked)controls.unlock();setTimeout(()=>showDetail(hit.object.userData.painting.id),60)}}addEventListener('mousedown',e=>{if(e.button===0&&!isTouch&&controls.isLocked)inspect()});$('inspectTouch').onclick=inspect;
+const ray=new THREE.Raycaster();function nearestPainting(){ray.setFromCamera(new THREE.Vector2(0,0),camera);const hit=ray.intersectObjects(clickable,false)[0];return hit&&hit.distance<4.6?hit:null}function inspect(){const hit=nearestPainting();if(hit){if(!isTouch&&controls.isLocked)controls.unlock();setTimeout(()=>showDetail(hit.object.userData.painting.id),60)}}addEventListener('mousedown',e=>{if(e.button===0&&!isTouch&&controls.isLocked)inspect()});$('inspectTouch').onclick=inspect;
 // Controles táctiles
 let joyX=0,joyY=0;const joystick=$('joystick'),knob=$('joyKnob'),lookPad=$('lookPad');let joyId=null,lookId=null,lastLookX=0,lastLookY=0;
 function setJoyFromEvent(e){const r=joystick.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,max=r.width*.32;let dx=e.clientX-cx,dy=e.clientY-cy;const len=Math.hypot(dx,dy)||1,scale=Math.min(1,max/len);dx*=scale;dy*=scale;knob.style.transform=`translate(${dx}px,${dy}px)`;joyX=dx/max;joyY=dy/max}
 joystick.addEventListener('pointerdown',e=>{e.preventDefault();joyId=e.pointerId;try{joystick.setPointerCapture(e.pointerId)}catch(_){}setJoyFromEvent(e)},{passive:false});joystick.addEventListener('pointermove',e=>{if(e.pointerId===joyId){e.preventDefault();setJoyFromEvent(e)}},{passive:false});function endJoy(e){if(e.pointerId!==joyId)return;e.preventDefault();joyId=null;joyX=joyY=0;knob.style.transform='translate(0,0)'}joystick.addEventListener('pointerup',endJoy,{passive:false});joystick.addEventListener('pointercancel',endJoy,{passive:false});
-lookPad.addEventListener('pointerdown',e=>{lookId=e.pointerId;lastLookX=e.clientX;lastLookY=e.clientY;lookPad.setPointerCapture(e.pointerId);$('mobileLookHint')?.classList.add('hide')});lookPad.addEventListener('pointermove',e=>{if(e.pointerId!==lookId)return;const dx=e.clientX-lastLookX,dy=e.clientY-lastLookY;lastLookX=e.clientX;lastLookY=e.clientY;camera.rotation.y-=dx*.00325;camera.rotation.x-=dy*.0029;camera.rotation.x=Math.max(-1.22,Math.min(1.22,camera.rotation.x))});function endLook(e){if(e.pointerId===lookId)lookId=null}lookPad.addEventListener('pointerup',endLook);lookPad.addEventListener('pointercancel',endLook);
+lookPad.addEventListener('pointerdown',e=>{lookId=e.pointerId;lastLookX=e.clientX;lastLookY=e.clientY;lookPad.setPointerCapture(e.pointerId);$('mobileLookHint')?.classList.add('hide')});lookPad.addEventListener('pointermove',e=>{if(e.pointerId!==lookId)return;const dx=e.clientX-lastLookX,dy=e.clientY-lastLookY;lastLookX=e.clientX;lastLookY=e.clientY;camera.rotation.y-=dx*.0027;camera.rotation.x-=dy*.00235;camera.rotation.x=Math.max(-.82,Math.min(.82,camera.rotation.x))});function endLook(e){if(e.pointerId===lookId)lookId=null}lookPad.addEventListener('pointerup',endLook);lookPad.addEventListener('pointercancel',endLook);
 function moveTouch(dt){
   if(Math.abs(joyX)<.06&&Math.abs(joyY)<.06)return;
   // En móvil movemos la cámara directamente. Esto evita conflictos de
